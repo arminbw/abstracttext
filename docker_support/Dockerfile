@@ -1,4 +1,4 @@
-FROM mediawiki:stable
+FROM mediawiki:1.34.4
 LABEL maintainer="arthurpsmith@gmail.com"
 
 RUN apt-get update && apt-get install -q -y git curl nodejs npm
