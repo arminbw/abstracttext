@@ -77,8 +77,10 @@ RUN set -eux; \
     
 # MediaWiki setup - specify 1.35.0-wmf.38 version
 RUN set -eux; \
-    git clone https://gerrit.wikimedia.org/r/mediawiki/core.git --branch wmf/1.35.0-wmf.38 /var/www/html; \
-    cd /var/www/html \
+    git clone https://gerrit.wikimedia.org/r/mediawiki/core.git /var/www/html
+
+RUN cd /var/www/html \
+    git checkout tags/1.35.1 \
     git submodule update --init 
 
 RUN apt-get update; \
@@ -87,9 +89,9 @@ RUN apt-get update; \
 RUN npm install npm@latest -g
 
 RUN cd /var/www/html/extensions \
-    git clone https://github.com/google/abstracttext.git AbstractText
-
-RUN cd /var/www/html/extensions/AbstractText/eneyj \
+    git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/UniversalLanguageSelector.git \
+    git clone https://github.com/google/abstracttext.git /var/www/html/extensions/AbstractText \
+    cd /var/www/html/extensions/AbstractText/eneyj \
     npm install \
     npm install uuid \
     mkdir config \
