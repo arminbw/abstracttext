@@ -49,16 +49,16 @@ RUN set -eux; \
 
 # Enable Short URLs
 RUN set -eux; \
-    a2enmod rewrite; \
-    { \
-        echo '<Directory /var/www/html>'; \
-        echo ' RewriteEngine On'; \
-        echo ' RewriteCond %{REQUEST_FILENAME} !-f'; \
-        echo ' RewriteCond %{REQUEST_FILENAME} !-d'; \
-        echo ' RewriteRule ^ %{DOCUMENT_ROOT}/index.php [L]'; \
-        echo ''; \
-    } > "$APACHE_CONFDIR/conf-available/short-url.conf"; \
-    a2enconf short-url
+    a2enmod rewrite \
+    && { \
+            echo '<Directory /var/www/html>'; \
+            echo ' RewriteEngine On'; \
+            echo ' RewriteCond %{REQUEST_FILENAME} !-f'; \
+            echo ' RewriteCond %{REQUEST_FILENAME} !-d'; \
+            echo ' RewriteRule ^ %{DOCUMENT_ROOT}/index.php [L]'; \
+            echo '</Directory>'; \
+        } > "$APACHE_CONFDIR/conf-available/short-url.conf" \
+    && a2enconf short-url
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -81,7 +81,8 @@ RUN set -eux; \
 
 RUN cd /var/www/html \
     git checkout tags/1.35.1 \
-    git submodule update --init 
+    git submodule update --init \
+    git submodule update --init vendor
 
 RUN apt-get update; \
     apt-get install -q -y curl nodejs npm
@@ -110,7 +111,8 @@ RUN cd /var/www/html \
 
 RUN cat /tmp/AdditionalLocalSettings.php >> /var/www/html/LocalSettings.php
 
-RUN cd /var/www/html && php maintenance/update.php
+RUN cd /var/www/html \
+    php maintenance/update.php
 
 RUN cd /var/www/html \
     php maintenance/importTextFiles.php -s "Import data" --prefix "M:" --overwrite extensions/AbstractText/eneyj/data/Z*
