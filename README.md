@@ -1,3 +1,6 @@
+> **:warning: Please note**  
+> This prototype is [obsolet](https://github.com/google/abstracttext/issues/29#issuecomment-748190421). Further development is happening in [MediaWiki-Land](https://www.mediawiki.org/wiki/Extension:WikiLambda).
+
 # AbstractText
 
 Extension to handle multilingual content in MediaWiki.
